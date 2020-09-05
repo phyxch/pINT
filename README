@@ -1,0 +1,16 @@
+Sep 4, 2020 Hexc
+Updated the code for running multithread mode 
+
+April 21, 2014 Olesya, Hexc
+Updated code for writing our histogram (i.e., ntuples) and extra tracking step info
+
+November 15, 2013 Hexc
+Update the code for using Geant4.9.6 release. I checked the pINT package from GSU local cvs.
+
+
+May 20, 2010, Hexc, Kanishka
+This is the project for simulating cosmic ray shower in the atmosphere.
+
+1) We divide the atmosphere into multiple layers with variable air density.  
+2) The world volume is a box and each layer is a cylindrical volume
+
