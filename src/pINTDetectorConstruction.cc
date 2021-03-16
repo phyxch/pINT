@@ -5,6 +5,8 @@
 //    Add soil material definitions for studying neutron scattering in soil with different moisture contents
 // April 18, 2019: X. He and Hemendra
 //    Add soil material with different moisture contents
+// March 15, 2021: Hexc
+//    Add scintillator material
 //    
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -286,12 +288,6 @@ void pINTDetectorConstruction::DefineMaterials()
   defaultMaterial  = H2O;
 
   //
-  // We force the material type in scintillator as vacuum
-  //
-  
-  ScintMaterial = Vacuum;
-
-  //
   // Set the world material
   //
   // Note: 4/4/2011. One can not use air material for the world volume
@@ -489,6 +485,9 @@ void pINTDetectorConstruction::SetNewMaterial(G4String mat)
     return;
   } else if ( mat.compareTo("air") == 0) {
     defaultMaterial = Air;
+    return;
+  } else if ( mat.compareTo("scint") == 0) {
+    defaultMaterial = ScintMaterial;
     return;
   } else if ( mat.compareTo("soilOne") == 0) {
     defaultMaterial = soilOne;

@@ -2,6 +2,7 @@
 
 // Updated: Oct 17, 2010, hexc, Add detector update message.
 //          Oct 18, 2010, hexc, Add option for changing material types
+//          Mar 15, 2021, hexc, Add scintillator material choice
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -49,7 +50,7 @@ pINTDetectorMessenger::pINTDetectorMessenger(
 
   MaterialCmd = new G4UIcmdWithAString("/pINT/det/setMaterial",this);  
   MaterialCmd->SetGuidance("Define the material type.");
-  MaterialCmd->SetGuidance(" Input (pick one): h2o, co2, air, copper, lead, alum, tungston, uranium, soilOne, soilOne10W, soilOne20W, and soilOne30W");
+  MaterialCmd->SetGuidance(" Input (pick one): h2o, co2, air, scint, copper, lead, alum, tungston, uranium, soilOne, soilOne10W, soilOne20W, and soilOne30W");
   MaterialCmd->SetParameterName("newMaterial",true);
   MaterialCmd->SetDefaultValue("H2O");
   //MaterialCmd->SetCandidates("H2O, Air, CO2, Cu, Fe, Au, Pb");
