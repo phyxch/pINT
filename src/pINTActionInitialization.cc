@@ -7,15 +7,14 @@
 #include "pINTEventAction.hh"
 #include "pINTPrimaryGeneratorAction.hh"
 #include "pINTSteppingAction.hh"
-#include "pINTHistoManager.hh"
+// #include "pINTHistoManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-pINTActionInitialization::pINTActionInitialization(pINTDetectorConstruction *pINTDetector, pINTHistoManager *pINTHisto)
+pINTActionInitialization::pINTActionInitialization(pINTDetectorConstruction *pINTDetector)
  : G4VUserActionInitialization()
 {
   detector = pINTDetector;  
-  histo = pINTHisto;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -40,7 +39,7 @@ void pINTActionInitialization::Build() const
   pINTEventAction* eventAction = new pINTEventAction(runAction);
   SetUserAction(eventAction);
 
-  SetUserAction(new pINTSteppingAction(detector, eventAction, histo));
+  SetUserAction(new pINTSteppingAction(detector, eventAction, runAction));
   SetUserAction(new pINTPrimaryGeneratorAction(detector));
 }  
 

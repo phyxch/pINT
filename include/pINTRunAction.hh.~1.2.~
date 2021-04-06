@@ -1,7 +1,5 @@
 // Created on Oct 15, 2010, Hexc, Kanishka
 //
-// Updated Apr 6, 2021: hexc (for Physics 8610 class)
-//    Added ntuple column ID's for writing out ROOT ntuple
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -9,7 +7,7 @@
 #ifndef pINTRunAction_h
 #define pINTRunAction_h 1
 
-//#include "pINTHistoManager.hh"
+#include "pINTHistoManager.hh"
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 
@@ -23,15 +21,14 @@ class pINTRunAction : public G4UserRunAction
 {
 public:
   pINTRunAction();
-  // pINTRunAction(pINTHistoManager*);
+  pINTRunAction(pINTHistoManager*);
 
   virtual ~pINTRunAction();
 
   void BeginOfRunAction(const G4Run*);
   void   EndOfRunAction(const G4Run*);
     
-  void fillPerEvent(G4double, G4double);
-  G4int GetNtColID(G4int id) { return fNtColID[id];};
+  void fillPerEvent(G4double, G4double); 
 
 private:
   
@@ -42,7 +39,7 @@ private:
   G4double aveELoss2, aveTrackLength2;
 
   pINTOutput* fileOut;
-  G4int fNtColID[8];   
+  pINTHistoManager* Histo;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

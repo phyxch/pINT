@@ -6,7 +6,7 @@
 
 #include "G4VUserActionInitialization.hh"
 #include "pINTDetectorConstruction.hh"
-#include "pINTHistoManager.hh"
+//#include "pINTHistoManager.hh"
 
 /// Action initialization class.
 ///
@@ -16,7 +16,7 @@
 class pINTActionInitialization : public G4VUserActionInitialization
 {
 public:
-  pINTActionInitialization(pINTDetectorConstruction*, pINTHistoManager*);
+  pINTActionInitialization(pINTDetectorConstruction*);
   virtual ~pINTActionInitialization();
   
   virtual void BuildForMaster() const;
@@ -24,7 +24,7 @@ public:
   
 private:
   pINTDetectorConstruction *detector;
-  pINTHistoManager *histo;
+  //  pINTHistoManager *histo;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -1,5 +1,9 @@
 // Created on Oct 15, 2010, Hexc, Kanishka
 //
+// Updated on April 6, 2021: hexc
+//    Fixing a problem of writing ROOT output
+//
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -8,6 +12,8 @@
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
+#include "g4root.hh"
+//#include "G4AnalysisManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -15,8 +21,6 @@ pINTRunAction::pINTRunAction()
   : G4UserRunAction()
 {}
 
-pINTRunAction::pINTRunAction(pINTHistoManager* his) : Histo(his), G4UserRunAction()
-{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -29,10 +33,39 @@ void pINTRunAction::BeginOfRunAction(const G4Run* aRun)
 { 
   G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
 
-  // This part is not working yet
-  // Book the histogram, i.e., ntuple
-  //  Histo->book();
+  // Create analysis manager
+ 
+  G4cout << "##### Create ECRS analysis manager " << "  " << this << G4endl;
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
+  G4cout << "Using " << analysisManager->GetType() << " analysis manager" << G4endl;
+
+  // Create directories  
+  //analysisManager->SetHistoDirectoryName("histograms");
+  //analysisManager->SetNtupleDirectoryName("ntuple");
+  analysisManager->SetVerboseLevel(1);
+  
+  // Open an output file
+  
+  G4String fileName = "pINT_output";
+  analysisManager->OpenFile(fileName);
+
+  analysisManager->SetFirstNtupleId(1);
+
+  analysisManager->CreateNtuple("pINT", "track");
+  
+  fNtColID[0] = analysisManager->CreateNtupleDColumn(1, "pID");
+  fNtColID[1] = analysisManager->CreateNtupleDColumn(1, "Process");
+  fNtColID[2] = analysisManager->CreateNtupleDColumn(1, "x");
+  fNtColID[3] = analysisManager->CreateNtupleDColumn(1, "y");
+  fNtColID[4] = analysisManager->CreateNtupleDColumn(1, "z");
+  fNtColID[5] = analysisManager->CreateNtupleDColumn(1, "edep");
+  fNtColID[6] = analysisManager->CreateNtupleDColumn(1, "size");
+  fNtColID[7] = analysisManager->CreateNtupleDColumn(1, "diffKin");
+
+  analysisManager->FinishNtuple(1);
+  
+    
   //inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(true);
     
@@ -98,8 +131,17 @@ void pINTRunAction::EndOfRunAction(const G4Run* aRun)
      << "\n------------------------------------------------------------\n"
      << G4endl;
 
-  // Not working yet
-  //Histo->save();
+  
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  
+  // save histograms 
+  
+  analysisManager->Write();
+  analysisManager->CloseFile();
+  
+  // complete cleanup
+  
+  delete G4AnalysisManager::Instance();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

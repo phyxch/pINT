@@ -3,7 +3,9 @@
 // April 18, 2019: X. He and Hemendra
 //   Added a new variable, stepl, to the output ntuple
 // Sep 4, 2020: hexc
-// removed fileOut
+//       removed fileOut
+// Apr 6, 2021: hexc
+//       Follow ECRS scheme of adding ntuples. Make run action visiable in the stepping action
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -11,12 +13,14 @@
 
 #include "pINTDetectorConstruction.hh"
 #include "pINTEventAction.hh"
+#include "pINTRunAction.hh"
 #include "G4Step.hh"
 #include "G4SteppingManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "pINTHistoManager.hh"
+//#include "pINTHistoManager.hh"
+#include "g4root.hh"
 
 #include "G4Electron.hh"
 #include "G4Proton.hh"
@@ -34,8 +38,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 pINTSteppingAction::pINTSteppingAction(pINTDetectorConstruction* det,
-				       pINTEventAction* evt, pINTHistoManager* his)
-  :detector(det), eventaction(evt), Histo(his)
+				       pINTEventAction* evt, pINTRunAction* run)
+  :detector(det), eventaction(evt), run_action(run)
 {
   // Get the reference for writing output to a file
   //  fileOut = pINTOutput::instance();
@@ -50,6 +54,10 @@ pINTSteppingAction::~pINTSteppingAction()
 
 void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+      
+  // get analysis manager
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  
   // get volume of the current step
   G4VPhysicalVolume* volume 
   = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
@@ -122,18 +130,18 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
       xp=aStep->GetPostStepPoint()->GetPosition().x()/nanometer;
       yp=aStep->GetPostStepPoint()->GetPosition().y()/nanometer;
       zp=aStep->GetPostStepPoint()->GetPosition().z()/nanometer;
-      /* NOT working yet
-      Histo->FillNtupleDColumn(0, flagParticle);
-      Histo->FillNtupleDColumn(1, flagProcess);
-      Histo->FillNtupleDColumn(2, x);
-      Histo->FillNtupleDColumn(3, y);
-      Histo->FillNtupleDColumn(4, z);
-      Histo->FillNtupleDColumn(5, aStep->GetTotalEnergyDeposit()/eV);
-      Histo->FillNtupleDColumn(6, std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm);
-      Histo->FillNtupleDColumn(7, (aStep->GetPreStepPoint()->GetKineticEnergy() - aStep->GetPostStepPoint()->GetKineticEnergy())/eV );
+
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(0), flagParticle);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(1), flagProcess);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2), x);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3), y);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(4), z);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(5), aStep->GetTotalEnergyDeposit()/eV );
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(6), std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm );
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7), (aStep->GetPreStepPoint()->GetKineticEnergy() - aStep->GetPostStepPoint()->GetKineticEnergy())/eV);
       
-      Histo->AddNtupleRow();
-      */
+      analysisManager->AddNtupleRow(1);
+
     }
   
 }

@@ -88,7 +88,7 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(physicsList);
 
   // Create ourput ntuple
-  pINTHistoManager* histo = new pINTHistoManager();
+  // pINTHistoManager* histo = new pINTHistoManager();
 
 
   //
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 
   // Set user action initialization
   //
-  runManager->SetUserInitialization(new pINTActionInitialization(detector, histo));
+  runManager->SetUserInitialization(new pINTActionInitialization(detector));
 
   G4cout << "Got here!" << G4endl;
   
