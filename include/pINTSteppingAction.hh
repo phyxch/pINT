@@ -33,6 +33,8 @@ private:
   pINTRunAction*            run_action;
 
   pINTOutput*  fileOut;
+  bool firstStep;
+  G4double initKE;       // for storing the primary particle KE
   //  pINTHistoManager* Histo;
 };
 
