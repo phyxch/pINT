@@ -74,14 +74,12 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
   
   // collect energy and track length step by step
   
-
   if (volume->GetName() == "Block") {
     G4double edep = aStep->GetTotalEnergyDeposit();
     G4double stepl = aStep->GetStepLength();
     if (aStep->GetTrack()->GetTrackID() == 1) {  // the primary track
       G4double ke = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
       G4double eZpos = aStep->GetPostStepPoint()->GetPosition().z()/cm;
-
 
       //sum nb of radiation length of calorimeter with geantino
       //
@@ -93,15 +91,6 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
 	G4cout << "radL = " << radl << ",  stepl/radl  "  << stepl/radl << G4endl; 	
       }
       
-      /*
-      // Only check on the electron kinetic energy
-      if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName() == "e-") {    
-	if ( initKE/ke <= 2.718 ) {
-	  G4cout << "initKE = " << initKE << ",  ke =  "  << ke << ",  Zposition = " << eZpos << G4endl; 
-	}
-      }
-      */
-	
       //
       // Update energy deposit and total tracklength.
       //
@@ -110,11 +99,11 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
       // Here we collect all info and write to ntuple
       // Modeled from the dnaphysics example
       // This section should be modified further.  4/28/2014.  Olesya, hexc
+
       G4double flagParticle=0.;
       G4double flagProcess=0.;
       G4double x,y,z,xp,yp,zp;
-      
-      
+            
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName() == "e-")       flagParticle = 1;    
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName() == "proton")   flagParticle = 2;
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName() == "hydrogen") flagParticle = 3;
@@ -161,14 +150,16 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
 	  xp=aStep->GetPostStepPoint()->GetPosition().x()/nanometer;
 	  yp=aStep->GetPostStepPoint()->GetPosition().y()/nanometer;
 	  zp=aStep->GetPostStepPoint()->GetPosition().z()/nanometer;
-	  
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(0), flagParticle);
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(1), flagProcess);
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2), x);
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3), y);
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(4), z);
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(5), aStep->GetTotalEnergyDeposit()/eV );
-	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(6), std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm );
+
+	  // Use a temp event ID for now
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(0), 999);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(1), flagParticle);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2), flagProcess);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3), x);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(4), y);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(5), z);
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(6), aStep->GetTotalEnergyDeposit()/eV );
+	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7), std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm );
 	  //      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7), (aStep->GetPreStepPoint()->GetKineticEnergy() - aStep->GetPostStepPoint()->GetKineticEnergy())/eV);
 	  analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7), (aStep->GetPostStepPoint()->GetKineticEnergy())/MeV);
 	  

@@ -1,0 +1,3 @@
+# To limit the output flow
+/run/printProgress 100
+/vis/viewer/set/hiddenMarker 1

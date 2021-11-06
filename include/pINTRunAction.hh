@@ -3,6 +3,9 @@
 // Updated Apr 6, 2021: hexc (for Physics 8610 class)
 //    Added ntuple column ID's for writing out ROOT ntuple
 //
+// Updated Nov 5, 2021: hexc
+//    Added event ID to the ntuple
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -42,7 +45,7 @@ private:
   G4double aveELoss2, aveTrackLength2;
 
   pINTOutput* fileOut;
-  G4int fNtColID[8];   
+  G4int fNtColID[9];   
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -408,6 +408,7 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
   logicScintFront->SetVisAttributes(scintColorFront);
   logicScintBack->SetVisAttributes(scintColorBack);
 
+  /* Removed sensitive volume use 11/5/2021 HE
   // Implement the sensitive detector and add to the SD manager
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
@@ -423,6 +424,8 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
   
   logicScintFront->SetSensitiveDetector(scintFrontSD);
   logicScintBack->SetSensitiveDetector(scintBackSD);
+  
+  */
   
   //
   //always return the physical World

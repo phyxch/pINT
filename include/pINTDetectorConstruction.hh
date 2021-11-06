@@ -1,6 +1,10 @@
 // Created on October 15, 2010, Hexc and his students
 // April 11, 2019: X. He, Hemendra and James
 //    Add soil material definitions for studying neutron scattering in soil with different moisture contents
+//
+// Nov 5, 2021: X. He
+//    Removed forward class definition. Use headerfiles only.
+//    Removed sensitive volume definitation for the front and back scintillating plate
 //    
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -9,18 +13,30 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4Sphere.hh"
+#include "G4LogicalVolume.hh"
+#include "G4PVPlacement.hh"
+
+#include "G4Material.hh"
+#include "G4NistManager.hh"
+
+#include "G4GeometryManager.hh"
+
+#include "G4UniformMagField.hh"
+#include "pINTDetectorMessenger.hh"
+#include "pINTScintillatorFrontSD.hh"
+#include "pINTScintillatorBackSD.hh"
 
 //#include <vector>
 
-class G4Box;
-class G4Tubs;
-class G4LogicalVolume;
-class G4VPhysicalVolume;
-class G4Material;
-class G4UniformMagField;
-class pINTDetectorMessenger;
-class pINTScintillatorFrontSD;
-class pINTScintillatorBackSD;
+//class G4Box;
+//class G4Tubs;
+//class G4LogicalVolume;
+//class G4VPhysicalVolume;
+//class G4Material;
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

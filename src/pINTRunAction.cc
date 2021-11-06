@@ -3,6 +3,8 @@
 // Updated on April 6, 2021: hexc
 //    Fixing a problem of writing ROOT output
 //
+// Updated on November 5, 2021: hexc
+//    Turn on ntuple merging
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -12,6 +14,8 @@
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
+#include "G4SystemOfUnits.hh"
+
 #include "g4root.hh"
 //#include "G4AnalysisManager.hh"
 
@@ -19,7 +23,24 @@
 
 pINTRunAction::pINTRunAction()
   : G4UserRunAction()
-{}
+{
+  // set printing event number per each event
+  G4RunManager::GetRunManager()->SetPrintProgress(1);     
+
+    // Create analysis manager
+  // The choice of analysis technology is done via selectin of a namespace
+  // in nbAnalysis.hh
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4cout << "Using " << analysisManager->GetType() << G4endl;
+
+  // Create directories 
+  //analysisManager->SetHistoDirectoryName("histograms");
+  //analysisManager->SetNtupleDirectoryName("ntuple");
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);
+  // Note: merging ntuples is available only with Root output
+
+}
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -43,25 +64,28 @@ void pINTRunAction::BeginOfRunAction(const G4Run* aRun)
   // Create directories  
   //analysisManager->SetHistoDirectoryName("histograms");
   //analysisManager->SetNtupleDirectoryName("ntuple");
-  analysisManager->SetVerboseLevel(1);
+  //analysisManager->SetVerboseLevel(1);
   
   // Open an output file
   
   G4String fileName = "pINT_output";
   analysisManager->OpenFile(fileName);
 
-  analysisManager->SetFirstNtupleId(1);
-
-  analysisManager->CreateNtuple("pINT", "track");
+  analysisManager->CreateH1("Eloss","Edep in shell", 100, 0., 100*MeV);
+  //analysisManager->CreateH1("Egap","Edep in gap", 100, 0., 100*MeV);
+  analysisManager->CreateH1("TrackL","trackL in shell", 100, 0., 1*m);
   
-  fNtColID[0] = analysisManager->CreateNtupleDColumn(1, "pID");
-  fNtColID[1] = analysisManager->CreateNtupleDColumn(1, "Process");
-  fNtColID[2] = analysisManager->CreateNtupleDColumn(1, "x");
-  fNtColID[3] = analysisManager->CreateNtupleDColumn(1, "y");
-  fNtColID[4] = analysisManager->CreateNtupleDColumn(1, "z");
-  fNtColID[5] = analysisManager->CreateNtupleDColumn(1, "edep");
-  fNtColID[6] = analysisManager->CreateNtupleDColumn(1, "size");
-  fNtColID[7] = analysisManager->CreateNtupleDColumn(1, "diffKin");
+  analysisManager->SetFirstNtupleId(1);
+  analysisManager->CreateNtuple("pINT", "track");  
+  fNtColID[0] = analysisManager->CreateNtupleDColumn(1, "evtID");
+  fNtColID[1] = analysisManager->CreateNtupleDColumn(1, "pID");
+  fNtColID[2] = analysisManager->CreateNtupleDColumn(1, "Process");
+  fNtColID[3] = analysisManager->CreateNtupleDColumn(1, "x");
+  fNtColID[4] = analysisManager->CreateNtupleDColumn(1, "y");
+  fNtColID[5] = analysisManager->CreateNtupleDColumn(1, "z");
+  fNtColID[6] = analysisManager->CreateNtupleDColumn(1, "edep");
+  fNtColID[7] = analysisManager->CreateNtupleDColumn(1, "size");
+  fNtColID[8] = analysisManager->CreateNtupleDColumn(1, "diffKin");
 
   analysisManager->FinishNtuple(1);
   

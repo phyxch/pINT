@@ -44,6 +44,7 @@ target_link_libraries(pINT ${Geant4_LIBRARIES})
 set(pINT_SCRIPTS 
   vis.mac
   init_vis.mac
+  gui.mac
   )
 
 foreach(_script ${pINT_SCRIPTS})

@@ -17,7 +17,9 @@
 #include "G4VTrajectory.hh"
 #include "G4VVisManager.hh"
 #include "G4UnitsTable.hh"
-#include "G4SDManager.hh"
+//#include "G4SDManager.hh"
+
+#include "g4root.hh"
 
 #include "Randomize.hh"
 #include <iomanip>
@@ -57,12 +59,14 @@ void pINTEventAction::BeginOfEventAction(const G4Event* evt)
     G4cout << "\n---> Begin of event: " << eventID << G4endl;
     CLHEP::HepRandom::showEngineStatus();
   }
-  
+
+  /* 11/5/2021 
   if ( (scintFrontID == -1) || (scintBackID == -1) )   {
     G4SDManager *SDman = G4SDManager::GetSDMpointer();
     scintFrontID = SDman->GetCollectionID("scintFrontSD");
     scintBackID = SDman->GetCollectionID("scintBackSD");
   }
+  */
 
   totalEnergyDeposit = 0.0;
   totalTrackLength = 0.0;
@@ -74,23 +78,24 @@ void pINTEventAction::EndOfEventAction(const G4Event* evt)
 {
   //print per event (modulo n)
   //
-  //  G4int evtNb = evt->GetEventID();
+  G4int evtNb = evt->GetEventID();
 
   // Output the event number
   // Updated on 4/28/2014, Olesya, hexc
   // fileOut->fout << "Event number: " << eventID << G4endl;
   
-  if (eventID%printModulo == 0) {
-    G4cout << "---> End of event: " << eventID << G4endl;	
-    
-  }
+  //if (eventID%printModulo == 0) {
+  //  G4cout << "---> End of event: " << eventID << G4endl;	
+  //  
+  //}
   
   //
   // accumulates statistic, i.e., to calculate the mean energy loss and track length
   //
   
-  G4cout << " EndOfEvent in pINTEventAction. " << G4endl;
+  //G4cout << " EndOfEvent in pINTEventAction. " << G4endl;
 
+  /*
   // Collect information of particle hits in the scintillators
   G4HCofThisEvent* HCE = evt->GetHCofThisEvent();
 
@@ -117,7 +122,8 @@ void pINTEventAction::EndOfEventAction(const G4Event* evt)
       //nhitNearEarthSurface = SHC->entries();
       SHC_back->PrintAllHits();
     }
-
+  */
+  
   // 
   // Printout the total energy loss and tracklength 
   //
@@ -128,6 +134,15 @@ void pINTEventAction::EndOfEventAction(const G4Event* evt)
 
   runAct->fillPerEvent(totalEnergyDeposit, totalTrackLength);
 
+  // get analysis manager
+  auto analysisManager = G4AnalysisManager::Instance();
+
+  // accumulate statistic
+  // in the order of the histograms, ntuple columns declarations
+  G4int counter = 0;
+  analysisManager->FillH1(counter++, totalEnergyDeposit);
+  analysisManager->FillH1(counter++, totalTrackLength);
+  
 }  
 
 
