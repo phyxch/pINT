@@ -59,7 +59,7 @@ public:
     
 public:
     
-    G4double GetWorldSizeZ()           {return WorldSizeZ;}; 
+    G4double GetWorldSizeZ()          {return WorldSizeZ;}; 
     G4double GetWorldSizeX()          {return WorldSizeX;};
     G4double GetWorldSizeY()          {return WorldSizeY;};
     

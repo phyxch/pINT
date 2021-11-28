@@ -7,6 +7,8 @@
 //    Add soil material with different moisture contents
 // March 15, 2021: Hexc
 //    Add scintillator material
+// November 27, 2021: Hexc
+//    Set the world size as a factor of 1.5 larger than the block size in x, y and z.
 //    
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -33,6 +35,8 @@
 #include "pINTScintillatorFrontSD.hh"
 #include "pINTScintillatorBackSD.hh"
 
+#include "pINTPrimaryGeneratorAction.hh"
+
 #include <math.h>
 
 using namespace CLHEP;
@@ -53,10 +57,6 @@ pINTDetectorConstruction::pINTDetectorConstruction()
   // default parameter values of the atmospheric volume
 
 
-  WorldSizeZ = 150.0*cm;
-  WorldSizeX = 50.0*cm;
-  WorldSizeY = 50.0*cm;
-
   blockZ = 50.0*cm;
   blockX = 30.0*cm;
   blockY = 30.0*cm;
@@ -65,6 +65,10 @@ pINTDetectorConstruction::pINTDetectorConstruction()
   scintX = 30.0*cm;
   scintY = 30.0*cm;
 
+  WorldSizeZ = 1.5*blockZ;
+  WorldSizeX = 1.5*blockX;
+  WorldSizeY = 1.5*blockY;
+  
   // materials
   DefineMaterials();
   
@@ -310,6 +314,8 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
   //     
   // World
   //
+  
+  WorldSizeZ = 1.5*blockZ; // Make sure that we have the updated blockZ size
 
   solidWorld = new G4Box("World",				//its name
 			 WorldSizeX/2,WorldSizeY/2,WorldSizeZ/2);	//its size
@@ -516,7 +522,11 @@ void pINTDetectorConstruction::SetNewMaterial(G4String mat)
 void pINTDetectorConstruction::UpdateGeometry()
 {
 
-  G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+  //  G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+  //  G4RunManager::GetRunManager()->InitializeGeometry();
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+  //  G4RunManager::GetRunManager()->SetUserAction(new pINTPrimaryGeneratorAction(this));
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
