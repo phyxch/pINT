@@ -3,6 +3,9 @@
 // Updated on 10/27/2010:  Add option for choosing a launch point.
 // Updated on 4/28/2014, Olesya, hexc
 // Updated on 9/16/2014, Olesya, hexc:  Added CLHEP namespace
+// Updated on 11/27/2021: hexc
+//    Updated launch position in z to follow the block size
+//
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -45,9 +48,6 @@ pINTPrimaryGeneratorAction::pINTPrimaryGeneratorAction(
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   particleGun->SetParticleEnergy(5.*GeV);
   //particleGun->SetParticleMomentum(1.*GeV);
-  G4double position = 0.49*(pINTDetector->GetWorldSizeZ());
-  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm, position));
-  launchPoint = position;
 
 }
 
@@ -63,6 +63,10 @@ pINTPrimaryGeneratorAction::~pINTPrimaryGeneratorAction()
 
 void pINTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
+  G4double position = 0.49*(pINTDetector->GetWorldSizeZ());
+  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm, position));
+  launchPoint = position;
+  
   //this function is called at the begining of event
   // 
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
