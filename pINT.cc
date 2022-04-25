@@ -50,7 +50,7 @@
 namespace {
   void PrintUsage() {
     G4cerr << " Usage: " << G4endl;
-    G4cerr << " neutronBall [-m macro ] [-u UIsession] [-t nThreads]" << G4endl;
+    G4cerr << " pINT [-m macro ] [-u UIsession] [-t nThreads]" << G4endl;
     G4cerr << "   note: -t option is available only for multi-threaded mode."
            << G4endl;
   }
