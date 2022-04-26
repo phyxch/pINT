@@ -2,7 +2,9 @@
 // Updated on March 5, 2011 for calcuating the total energy loss and tracklength.  hexc
 // Updated on Arpil 21, 2014 for writing our the total energy loss and tracklength 
 //   in each event.  Olesya, hexc
-
+// 
+// Updated on April 26, 2022: hexc
+//    Removed g4root.hh and implemented G4AnalysisManager.
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "pINTEventAction.hh"
@@ -19,7 +21,10 @@
 #include "G4UnitsTable.hh"
 //#include "G4SDManager.hh"
 
-#include "g4root.hh"
+//#include "g4root.hh"
+#include "G4GenericAnalysisManager.hh"
+using G4AnalysisManager = G4GenericAnalysisManager;
+
 
 #include "Randomize.hh"
 #include <iomanip>
@@ -79,50 +84,6 @@ void pINTEventAction::EndOfEventAction(const G4Event* evt)
   //print per event (modulo n)
   //
   G4int evtNb = evt->GetEventID();
-
-  // Output the event number
-  // Updated on 4/28/2014, Olesya, hexc
-  // fileOut->fout << "Event number: " << eventID << G4endl;
-  
-  //if (eventID%printModulo == 0) {
-  //  G4cout << "---> End of event: " << eventID << G4endl;	
-  //  
-  //}
-  
-  //
-  // accumulates statistic, i.e., to calculate the mean energy loss and track length
-  //
-  
-  //G4cout << " EndOfEvent in pINTEventAction. " << G4endl;
-
-  /*
-  // Collect information of particle hits in the scintillators
-  G4HCofThisEvent* HCE = evt->GetHCofThisEvent();
-
-  // Print out the hits collection from the Front Scint
-  pINTScintHitsCollection* SHC_front = NULL;
-
-  if (HCE) SHC_front = (pINTScintHitsCollection*)(HCE->GetHC(scintFrontID));
-
-  if (SHC_front) 
-    {
-      G4cout << " (pINTEventAction) scintFrontID = " << scintFrontID << G4endl;
-      //nhitNearEarthSurface = SHC->entries();
-      SHC_front->PrintAllHits();
-    }
-  
-  // Print out the hits collection from the Back Scint
-  pINTScintHitsCollection* SHC_back = NULL;
-
-  if (HCE) SHC_back = (pINTScintHitsCollection*)(HCE->GetHC(scintBackID));
-
-  if (SHC_back) 
-    {
-      G4cout << " (pINTEventAction) scintBackID = " << scintBackID << G4endl;
-      //nhitNearEarthSurface = SHC->entries();
-      SHC_back->PrintAllHits();
-    }
-  */
   
   // 
   // Printout the total energy loss and tracklength 

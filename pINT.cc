@@ -16,6 +16,9 @@
 //   Nov 5, 2021: Hexc
 //          Fixing the main function for running multithreaded mode
 //
+//   Apr 26, 2022: Hexc and Thomas Mulkey
+//          Added a scoring manager to the run manager. 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 
@@ -37,13 +40,12 @@
 #include "pINTSteppingVerbose.hh"
 #include "pINTActionInitialization.hh"
 
-#include "pINTHistoManager.hh"
-
 #include "pINTOutput.hh"
 
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
+#include "G4ScoringManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -138,6 +140,10 @@ int main(int argc, char** argv)
   }  
 #endif
 
+  // Add a scoring manager
+  //
+  auto scoring = G4ScoringManager::GetScoringManager();
+    
   // Set mandatory initialization classes
   //
   // Detector construction

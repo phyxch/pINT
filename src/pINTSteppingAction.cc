@@ -8,6 +8,8 @@
 //       Follow ECRS scheme of adding ntuples. Make run action visiable in the stepping action
 // Apr 27, 2021: hexc
 //       Modified for extracting material radiation length
+// Updated on April 26, 2022: hexc
+//    Removed g4root.hh and implemented G4AnalysisManager.
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "pINTSteppingAction.hh"
@@ -20,8 +22,9 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
-//#include "pINTHistoManager.hh"
-#include "g4root.hh"
+//#include "g4root.hh"
+#include "G4GenericAnalysisManager.hh"
+using G4AnalysisManager = G4GenericAnalysisManager;
 
 #include "G4Electron.hh"
 #include "G4Proton.hh"

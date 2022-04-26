@@ -6,6 +6,9 @@
 // Updated on November 5, 2021: hexc
 //    Turn on ntuple merging
 //
+// Updated on April 26, 2022: hexc
+//    Removed g4root.hh and implemented G4AnalysisManager. Added ".root" extension to the ourput filename.
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -16,8 +19,11 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "g4root.hh"
-//#include "G4AnalysisManager.hh"
+//#include "g4root.hh"
+//#include "G4RootAnalysisManager.hh"
+#include "G4GenericAnalysisManager.hh"
+
+using G4AnalysisManager = G4GenericAnalysisManager;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -68,7 +74,7 @@ void pINTRunAction::BeginOfRunAction(const G4Run* aRun)
   
   // Open an output file
   
-  G4String fileName = "pINT_output";
+  G4String fileName = "pINT_output.root";
   analysisManager->OpenFile(fileName);
 
   analysisManager->CreateH1("Eloss","Edep in shell", 100, 0., 100*MeV);
@@ -163,9 +169,6 @@ void pINTRunAction::EndOfRunAction(const G4Run* aRun)
   analysisManager->Write();
   analysisManager->CloseFile();
   
-  // complete cleanup
-  
-  delete G4AnalysisManager::Instance();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
