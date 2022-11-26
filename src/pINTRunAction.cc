@@ -83,8 +83,8 @@ void pINTRunAction::BeginOfRunAction(const G4Run* aRun)
   
   analysisManager->SetFirstNtupleId(1);
   analysisManager->CreateNtuple("pINT", "track");  
-  fNtColID[0] = analysisManager->CreateNtupleDColumn(1, "evtID");
-  fNtColID[1] = analysisManager->CreateNtupleDColumn(1, "pID");
+  fNtColID[0] = analysisManager->CreateNtupleIColumn(1, "evtID");
+  fNtColID[1] = analysisManager->CreateNtupleIColumn(1, "pID");
   fNtColID[2] = analysisManager->CreateNtupleDColumn(1, "Process");
   fNtColID[3] = analysisManager->CreateNtupleDColumn(1, "x");
   fNtColID[4] = analysisManager->CreateNtupleDColumn(1, "y");

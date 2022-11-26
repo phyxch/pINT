@@ -7,9 +7,14 @@
 //    Add soil material with different moisture contents
 // March 15, 2021: Hexc
 //    Add scintillator material
+
 // November 27, 2021: Hexc
 //    Set the world size as a factor of 1.5 larger than the block size in x, y and z.
-//    
+//
+
+// November 15, 2022L Hexc
+//   Added option for reading in a detector configuration file.
+//
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 #include "pINTDetectorConstruction.hh"
@@ -54,9 +59,9 @@ pINTDetectorConstruction::pINTDetectorConstruction()
    physiScintFront(0), physiScintBack(0),
    magField(0), scintFrontSD(NULL), scintBackSD(NULL)
 {
+
+  // These numbers will be updated by reading in a configuration file
   // default parameter values of the atmospheric volume
-
-
   blockZ = 50.0*cm;
   blockX = 30.0*cm;
   blockY = 30.0*cm;
@@ -310,11 +315,67 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
+
+  // read the data through configuration file
+  std::ifstream infile ("config_pINT.txt");
+  
+  std::string line;
+
+  // Skip two comment lines
+  std::getline(infile, line);
+  G4cout << line << G4endl;
+  std::getline(infile, line);
+  G4cout << line << G4endl;
+
+  while (std::getline(infile, line))
+  {
+    vector<string> row_values;
+
+    split(line, ',', row_values);
+
+    if ( row_values[0] == "h2o") {
+      defaultMaterial = H2O;
+    } else if ( row_values[0] == "co2") {
+      defaultMaterial = CO2;
+    } else if ( row_values[0] == "lead") {
+      defaultMaterial = Lead;
+    } else if ( row_values[0] == "copper") {
+      defaultMaterial = Copper;
+    } else if ( row_values[0] == "uranium") {
+      defaultMaterial = Uranium;
+    } else if ( row_values[0] == "tungston") {
+      defaultMaterial = Tungston;
+    } else if ( row_values[0] == "alum") {
+      defaultMaterial = Alum;
+    } else if ( row_values[0] == "air") {
+      defaultMaterial = Air;
+    } else if ( row_values[0] == "scint") {
+      defaultMaterial = ScintMaterial;
+    } else if ( row_values[0] == "soilOne") {
+      defaultMaterial = soilOne;
+    } else if ( row_values[0] == "soilOne10W") {
+      defaultMaterial = soilOne10W;
+    } else if ( row_values[0] == "soilOne20W") {
+      defaultMaterial = soilOne20W;
+    } else if ( row_values[0] == "soilOne30W") {
+      defaultMaterial = soilOne30W;
+    } else {
+      G4cout << "Material is not found!!! Check your list of available materials" << G4endl;
+    }
+    
+    blockX = stod(row_values[1])*cm;
+    blockY = stod(row_values[2])*cm;
+    blockZ = stod(row_values[3])*cm;   
+  }
+
+  infile.close();
   
   //     
   // World
   //
   
+  WorldSizeX = 1.5*blockX; // Make sure that we have the updated blockX size
+  WorldSizeY = 1.5*blockY; // Make sure that we have the updated blockY size
   WorldSizeZ = 1.5*blockZ; // Make sure that we have the updated blockZ size
 
   solidWorld = new G4Box("World",				//its name
@@ -354,6 +415,9 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
   // 
   // construct front and back scintillators
   //
+  scintX = blockX;
+  scintY = blockY;
+  
   solidScintFront = new G4Box("ScintFront",			 //its name
 			      scintX/2,scintY/2,scintZ/2);	//its size
   
@@ -361,16 +425,15 @@ G4VPhysicalVolume* pINTDetectorConstruction::Construct()
 					ScintMaterial,	//
 					"ScintFront");		//its name
   
-  physiScintFront = new G4PVPlacement(0,			//no rotation
+  physiScintFront = new G4PVPlacement(0,     //no rotation
 				      G4ThreeVector(0.0, 0.0, blockZ/2.+scintZ/2.),	//at (0,0,0)
 				      "ScintFront",		//its name
 				      logicScintFront,		//its logical volume				 
-				      physiWorld,			//its mother  volume
+				      physiWorld,	        //its mother  volume
 				      false,			//no boolean operation
 				      0);			//copy number
   
-
-  solidScintBack = new G4Box("ScintBack",			 //its name
+  solidScintBack = new G4Box("ScintBack",		//its name
 			      scintX/2,scintY/2,scintZ/2);	//its size
   
   logicScintBack = new G4LogicalVolume(solidScintBack,		//its solid
@@ -522,11 +585,19 @@ void pINTDetectorConstruction::SetNewMaterial(G4String mat)
 void pINTDetectorConstruction::UpdateGeometry()
 {
 
-  //  G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-  //  G4RunManager::GetRunManager()->InitializeGeometry();
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
+  //G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+    G4RunManager::GetRunManager()->InitializeGeometry();
+  //  G4RunManager::GetRunManager()->ReinitializeGeometry();
   //  G4RunManager::GetRunManager()->SetUserAction(new pINTPrimaryGeneratorAction(this));
-  
 }
 
+void pINTDetectorConstruction::split(const std::string &s, char delim, std::vector<std::string> &elems)
+{
+  std::stringstream ss;
+  ss.str(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

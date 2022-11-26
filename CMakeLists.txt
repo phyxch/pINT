@@ -45,6 +45,7 @@ set(pINT_SCRIPTS
   vis.mac
   init_vis.mac
   gui.mac
+  config_pINT.txt
   )
 
 foreach(_script ${pINT_SCRIPTS})

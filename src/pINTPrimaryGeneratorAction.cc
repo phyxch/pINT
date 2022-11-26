@@ -45,7 +45,6 @@ pINTPrimaryGeneratorAction::pINTPrimaryGeneratorAction(
   G4ParticleDefinition* particle
                     = particleTable->FindParticle(particleName="mu-");
   particleGun->SetParticleDefinition(particle);
-  particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   particleGun->SetParticleEnergy(5.*GeV);
   //particleGun->SetParticleMomentum(1.*GeV);
 
@@ -63,17 +62,20 @@ pINTPrimaryGeneratorAction::~pINTPrimaryGeneratorAction()
 
 void pINTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  G4double position = 0.49*(pINTDetector->GetWorldSizeZ());
-  particleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm, position));
-  launchPoint = position;
+  G4double positionX = 0.49*(pINTDetector->GetWorldSizeX());
+  G4double positionY = 0.49*(pINTDetector->GetWorldSizeY());
+  G4double positionZ = 0.49*(pINTDetector->GetWorldSizeZ());
+
+  launchPoint = positionZ;
   
   //this function is called at the begining of event
   // 
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   G4String particleName;
 
-  G4double z0 = launchPoint;
-  G4double y0 = 0.*cm, x0 = 0.*cm;
+  G4double z0 = -launchPoint;
+  G4double y0 = 1.0*cm;
+  G4double x0 = 1.0*cm;
 
  
   if (rndmFlag == "on")
@@ -106,6 +108,7 @@ void pINTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     }
   
   particleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+  particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   particleGun->GeneratePrimaryVertex(anEvent);
 
 }
