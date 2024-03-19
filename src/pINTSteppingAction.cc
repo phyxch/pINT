@@ -73,6 +73,9 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
   G4VPhysicalVolume* volume 
   = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
+  // find and set event ID
+  G4int evtID = eventaction->getCurrentEventID();
+
   if (firstStep) {
     initKE = aStep->GetPreStepPoint()->GetKineticEnergy()/MeV;
     firstStep = false;
@@ -162,7 +165,7 @@ void pINTSteppingAction::UserSteppingAction(const G4Step* aStep)
       yp=aStep->GetPostStepPoint()->GetPosition().y()/cm;
       zp=aStep->GetPostStepPoint()->GetPosition().z()/cm;
       
-      analysisManager->FillNtupleIColumn(1, run_action->GetNtColID(0), 999);
+      analysisManager->FillNtupleIColumn(1, run_action->GetNtColID(0), evtID);
       analysisManager->FillNtupleIColumn(1, run_action->GetNtColID(1), PID);
       analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2), flagProcess);
       analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3), x);

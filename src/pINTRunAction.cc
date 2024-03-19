@@ -9,6 +9,9 @@
 // Updated on April 26, 2022: hexc
 //    Removed g4root.hh and implemented G4AnalysisManager. Added ".root" extension to the ourput filename.
 //
+// Updated on March 19, 2024: hexc
+//    Cleaning up code and adding more comments. Also, added time and date info to the output filename.
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -29,30 +32,13 @@ using G4AnalysisManager = G4GenericAnalysisManager;
 
 pINTRunAction::pINTRunAction()
   : G4UserRunAction()
-{
-  // set printing event number per each event
-  G4RunManager::GetRunManager()->SetPrintProgress(1);     
-
-    // Create analysis manager
-  // The choice of analysis technology is done via selectin of a namespace
-  // in nbAnalysis.hh
-  auto analysisManager = G4AnalysisManager::Instance();
-  G4cout << "Using " << analysisManager->GetType() << G4endl;
-
-  // Create directories 
-  //analysisManager->SetHistoDirectoryName("histograms");
-  //analysisManager->SetNtupleDirectoryName("ntuple");
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);
-  // Note: merging ntuples is available only with Root output
-
-}
+{;}
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 pINTRunAction::~pINTRunAction()
-{}
+{;}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -60,21 +46,35 @@ void pINTRunAction::BeginOfRunAction(const G4Run* aRun)
 { 
   G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
 
+  // Get the analysis manager
   // Create analysis manager
- 
-  G4cout << "##### Create ECRS analysis manager " << "  " << this << G4endl;
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4cout << "Using " << analysisManager->GetType() << G4endl;
 
-  G4cout << "Using " << analysisManager->GetType() << " analysis manager" << G4endl;
+  // set printing event number per each event
+  G4RunManager::GetRunManager()->SetPrintProgress(1);     
 
-  // Create directories  
+  // Create directories 
   //analysisManager->SetHistoDirectoryName("histograms");
   //analysisManager->SetNtupleDirectoryName("ntuple");
-  //analysisManager->SetVerboseLevel(1);
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);
+  // Note: merging ntuples is available only with Root output
+  
+  // Get time and date to creating a unique filename
+  time_t rawtime;
+  struct tm * timeinfo;
+  char buffer[80];
+  
+  time (&rawtime);
+  timeinfo = localtime(&rawtime);
+  
+  strftime(buffer,80,"-%d-%m-%Y-%H-%M-%S",timeinfo);
+  G4String DateTime(buffer);
   
   // Open an output file
-  
-  G4String fileName = "pINT_output.root";
+  G4String fileName = "pINT_output" + DateTime + ".root";  
+  //  G4String fileName = "pINT_output.root";
   analysisManager->OpenFile(fileName);
 
   analysisManager->CreateH1("Eloss","Edep in shell", 100, 0., 100*MeV);

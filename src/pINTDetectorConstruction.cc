@@ -12,7 +12,7 @@
 //    Set the world size as a factor of 1.5 larger than the block size in x, y and z.
 //
 
-// November 15, 2022L Hexc
+// November 15, 2022: Hexc
 //   Added option for reading in a detector configuration file.
 //
 

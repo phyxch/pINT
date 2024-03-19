@@ -29,6 +29,7 @@ public:
   
   void AddELossTrackLength(G4double, G4double);
   
+  G4int getCurrentEventID() { return eventID; }
   G4int GetEventID();
   
 private:

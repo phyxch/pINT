@@ -1,3 +1,3 @@
 # The first parameter is the material type and the second are dimension in x, y and z in cm 
 # The available material types are: h2o, co2, lead, copper, urannium, alum, air, scint, soilOne, soilOne10W, soilOne20W, and soilOne30W
-h2o, 50, 30, 30 
+h2o, 30, 30, 50 
